@@ -37,12 +37,20 @@ class ViewController: UIViewController {
     @IBAction func add(_ sender: UIControl?) {
         let name = UIImage.names.randomItem()
         let color = UIColor.colors.randomItem()
-        let node = Node(text: name.capitalized, image: UIImage(named: name), color: color, radius: 40)
+        let node = ImageNode(text: name.capitalized, image: UIImage(named: name), color: color, radius: 130/2)
         magnetic.addChild(node)
         
         // Image Node: image displayed by default
         // let node = ImageNode(text: name.capitalized, image: UIImage(named: name), color: color, radius: 40)
         // magnetic.addChild(node)
+    }
+    
+    func add(nextToNode: Node) {
+        let name = UIImage.names.randomItem()
+        let color = UIColor.colors.randomItem()
+        let node = ImageNode(text: name.capitalized, image: UIImage(named: name), color: color, radius: 130/2)
+        node.name = "test"
+        magnetic.addChild(node, nextToNode: nextToNode)
     }
     
     @IBAction func reset(_ sender: UIControl?) {
@@ -86,21 +94,29 @@ extension ViewController: MagneticDelegate {
     
     func magnetic(_ magnetic: Magnetic, didSelect node: Node) {
         print("didSelect -> \(node)")
+        for _ in 0..<4 {
+            add(nextToNode: node)
+        }
     }
     
     func magnetic(_ magnetic: Magnetic, didDeselect node: Node) {
         print("didDeselect -> \(node)")
+        for _ in 0..<4 {
+            let node = magnetic.childNode(withName: "test")
+            node?.removeFromParent()
+        }
+        
     }
     
 }
 
 // MARK: - ImageNode
 class ImageNode: Node {
-    override var image: UIImage? {
-        didSet {
-            sprite.texture = image.map { SKTexture(image: $0) }
-        }
-    }
+//    override var image: UIImage? {
+//        didSet {
+//            sprite.texture = image.map { SKTexture(image: $0) }
+//        }
+//    }
     override func selectedAnimation() {}
     override func deselectedAnimation() {}
 }

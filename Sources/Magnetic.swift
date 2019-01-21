@@ -97,6 +97,21 @@ import SpriteKit
         super.addChild(node)
     }
     
+    open func addChild(_ node: SKNode, nextToNode: Node) {
+        var x = nextToNode.frame.origin.x// - node.frame.width // left
+        if children.count % 2 == 0 {
+            x += nextToNode.frame.size.width// + node.frame.width // right
+        }
+        let y = nextToNode.frame.origin.y//CGFloat.random(node.frame.height, frame.height - node.frame.height)
+        node.position = CGPoint(x: x, y: y)
+        super.addChild(node)
+        
+        node.run(.scale(to: 0, duration: 0))
+        node.run(.scale(to: 1, duration: 0.2))
+//        if let texture = node.texture {
+//            node.sprite.run(.setTexture(texture))
+//        }
+    }
 }
 
 extension Magnetic {
