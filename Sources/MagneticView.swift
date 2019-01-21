@@ -8,14 +8,20 @@
 
 import SpriteKit
 
-public class MagneticView: SKView {
+open class MagneticView: SKView {
     
     @objc
-    public lazy var magnetic: Magnetic = { [unowned self] in
-        let scene = Magnetic(size: self.bounds.size)
-        self.presentScene(scene)
-        return scene
-    }()
+    public private(set) var magnetic: Magnetic!
+    
+    public convenience init(magnetic: Magnetic) {
+        self.init(frame: .zero, magnetic: magnetic)
+        
+    }
+    public convenience init(frame: CGRect, magnetic: Magnetic) {
+        self.init(frame: frame)
+        self.magnetic = magnetic
+        presentScene(scene)
+    }
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,10 +36,12 @@ public class MagneticView: SKView {
     }
     
     func commonInit() {
-        _ = magnetic
+        let scene = Magnetic(size: bounds.size)
+        self.magnetic = scene
+        presentScene(scene)
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         
         magnetic.size = bounds.size
