@@ -9,7 +9,19 @@
 import SpriteKit
 import Magnetic
 
+struct Composer: Codable, Hashable {
+    let shortName: String
+    let next: [Composer]?
+    
+    var hashValue: Int {
+        return shortName.hashValue
+    }
+}
+
 class ViewController: UIViewController {
+    var data: [Composer]?
+    var onScreenData = Set<Composer>()
+    var selectedData = Set<Composer>()
     
     @IBOutlet weak var magneticView: MagneticView! {
         didSet {
@@ -26,17 +38,33 @@ class ViewController: UIViewController {
         return magneticView.magnetic
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadData()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        for _ in 0..<12 {
-            add(nil)
+        for composer in data! {
+            let node = self.node(from: composer)
+            magnetic.addChild(node)
+            onScreenData.insert(composer)
         }
+    }
+    
+    private func loadData() {
+        let jsonUrl = Bundle.main.url(forResource: "composers", withExtension: "json")!
+        let json = try! Data(contentsOf: jsonUrl)
+        let decoder = JSONDecoder()
+        let data = try! decoder.decode([Composer].self, from: json)
+        print(data)
+        self.data = data
     }
     
     @IBAction func add(_ sender: UIControl?) {
         let name = UIImage.names.randomItem()
-        let color = UIColor.colors.randomItem()
+        let color = UIColor.lightGray//.colors.randomItem()
         let node = ImageNode(text: name.capitalized, image: UIImage(named: name), color: color, radius: 130/2)
         magnetic.addChild(node)
         
@@ -47,11 +75,20 @@ class ViewController: UIViewController {
     
     func add(nextToNode: Node) {
         let name = UIImage.names.randomItem()
-        let color = UIColor.colors.randomItem()
+        let color = UIColor.lightGray//colors.randomItem()
         let node = ImageNode(text: name.capitalized, image: UIImage(named: name), color: color, radius: 130/2)
         node.name = "test"
-        magnetic.addChild(node, nextToNode: nextToNode)
+//        magnetic.addChild(node, nextToNode: nextToNode)
     }
+    
+    func node(from data: Composer) -> Node {
+        let name = data.shortName
+        let color = UIColor.lightGray
+        let node = ImageNode(text: name, image: nil, color: color, radius: 130/2)
+        node.name = name
+        return node
+    }
+    
     
     @IBAction func reset(_ sender: UIControl?) {
         let speed = magnetic.physicsWorld.speed
@@ -92,22 +129,56 @@ class ViewController: UIViewController {
 // MARK: - MagneticDelegate
 extension ViewController: MagneticDelegate {
     
+    func data(from node: Node) -> Composer? {
+        guard let shortName = node.name else { return nil }
+        return onScreenData.first(where: {$0.shortName == shortName})
+    }
+    
     func magnetic(_ magnetic: Magnetic, didSelect node: Node) {
         print("didSelect -> \(node)")
-        for _ in 0..<4 {
-            add(nextToNode: node)
+        guard let data = self.data(from: node) else { return }
+        selectedData.insert(data)
+
+        guard let next = data.next else { return }
+        var newData = [Composer]()
+        for candidate in next {
+            if onScreenData.contains(candidate) == false {
+                newData.append(candidate)
+                onScreenData.insert(candidate)
+            }
         }
+        
+        var nodes = [Node]()
+        for data in newData {
+            let node = self.node(from: data)
+            nodes.append(node)
+        }
+        magnetic.addChildren(nodes, from: node)
     }
     
     func magnetic(_ magnetic: Magnetic, didDeselect node: Node) {
         print("didDeselect -> \(node)")
-        for _ in 0..<4 {
-            let node = magnetic.childNode(withName: "test")
-            node?.removeFromParent()
+        
+        guard let data = self.data(from: node) else { return }
+        selectedData.remove(data)
+
+        // find all that needs remove
+        guard let toRemove = data.next else { return }
+        var removeData = [Composer]()
+        var test = onScreenData.subtracting(selectedData)
+        for candidate in toRemove {
+            if test.contains(candidate) {
+                removeData.append(candidate)
+                test.remove(candidate)
+                onScreenData.remove(candidate)
+            }
         }
         
+        for data in removeData {
+            let node = magnetic.childNode(withName: data.shortName)
+            node?.removeFromParent()
+        }
     }
-    
 }
 
 // MARK: - ImageNode
@@ -117,6 +188,17 @@ class ImageNode: Node {
 //            sprite.texture = image.map { SKTexture(image: $0) }
 //        }
 //    }
-    override func selectedAnimation() {}
-    override func deselectedAnimation() {}
+    
+    override func selectedAnimation() {
+        run(.scale(to: 1.1, duration: 0.2))
+        color = .purple
+//        if let texture = texture {
+//            sprite.run(.setTexture(texture))
+//        }
+    }
+    
+    override func deselectedAnimation() {
+        run(.scale(to: 1, duration: 0.2))
+        color = .lightGray
+    }
 }

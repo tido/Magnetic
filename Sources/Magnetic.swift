@@ -97,20 +97,54 @@ import SpriteKit
         super.addChild(node)
     }
     
-    open func addChild(_ node: SKNode, nextToNode: Node) {
-        var x = nextToNode.frame.origin.x// - node.frame.width // left
-        if children.count % 2 == 0 {
-            x += nextToNode.frame.size.width// + node.frame.width // right
+    open func addChildren(_ nodes: [SKNode], from node: Node, delay: Double = 0.2, duration: Double = 0.4) {
+        enum Quadrant: Int {
+            case left = 0, top, right, bottom
+            
+            func position(from node: Node) -> CGPoint {
+                switch self {
+                case .left:     return CGPoint(x: node.frame.origin.x, y: node.frame.origin.y + node.frame.size.height / 2)
+                case .top:      return CGPoint(x: node.frame.origin.x + node.frame.size.width / 2, y: node.frame.origin.y)
+                case .right:    return CGPoint(x: node.frame.origin.x + node.frame.size.width, y: node.frame.origin.y + node.frame.size.height / 2)
+                case .bottom:   return CGPoint(x: node.frame.origin.x + node.frame.size.width / 2, y: node.frame.origin.y + node.frame.size.height)
+                }
+            }
+            
+            var next: Quadrant {
+                switch self {
+                case .left:     return .top
+                case .top:      return .right
+                case .right:    return .bottom
+                case .bottom:   return .top
+                }
+            }
         }
-        let y = nextToNode.frame.origin.y//CGFloat.random(node.frame.height, frame.height - node.frame.height)
-        node.position = CGPoint(x: x, y: y)
-        super.addChild(node)
         
-        node.run(.scale(to: 0, duration: 0))
-        node.run(.scale(to: 1, duration: 0.2))
-//        if let texture = node.texture {
-//            node.sprite.run(.setTexture(texture))
-//        }
+        var quadrant = Quadrant.left
+        for (index, newNode) in nodes.enumerated() {
+            newNode.position = quadrant.position(from: node)
+            quadrant = quadrant.next
+            super.addChild(newNode)
+
+            let start = SKAction.scale(to: 0, duration: 0)
+            let wait = SKAction.wait(forDuration: Double(index) * delay)
+            let scale = SKAction.scale(to: 1, duration: duration)
+            scale.timingMode = .easeOut
+            newNode.run(.sequence([start, wait, scale]))
+        }
+    }
+    
+    open func removeChildren(_ nodes: [SKNode], delay: Double = 0.2, duration: Double = 0.4) {
+        for (index, node) in nodes.enumerated() {
+            let wait = SKAction.wait(forDuration: Double(index) * delay)
+            let scale = SKAction.scale(to: 0, duration: duration)
+//            let fade = SKAction.scale(to: 0, duration: duration)
+            scale.timingMode = .easeIn
+
+            node.run(.sequence([wait, scale])) {
+                node.removeFromParent()
+            }
+        }
     }
 }
 

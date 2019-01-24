@@ -11,6 +11,7 @@
 		71E1B90A1FD7ECEB000E73A6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 71E1B9071FD7ECEA000E73A6 /* README.md */; };
 		71E1B90B1FD7ECEB000E73A6 /* Magnetic.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 71E1B9081FD7ECEA000E73A6 /* Magnetic.podspec */; };
 		71E1B90C1FD7ECEB000E73A6 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 71E1B9091FD7ECEA000E73A6 /* CHANGELOG.md */; };
+		8A0D369821FA10AC00417812 /* composers.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A0D369721FA10AC00417812 /* composers.json */; };
 		8B103C641E88AFA200CC83E2 /* Magnetic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6914BB1E70F6A90007896C /* Magnetic.framework */; };
 		8B103C651E88AFA200CC83E2 /* Magnetic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6914BB1E70F6A90007896C /* Magnetic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8B170CF71E8B2858005F45AB /* SFDisplay-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B170CE21E8B2858005F45AB /* SFDisplay-Black.otf */; };
@@ -76,6 +77,7 @@
 		71E1B9071FD7ECEA000E73A6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		71E1B9081FD7ECEA000E73A6 /* Magnetic.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Magnetic.podspec; sourceTree = "<group>"; };
 		71E1B9091FD7ECEA000E73A6 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		8A0D369721FA10AC00417812 /* composers.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = composers.json; sourceTree = "<group>"; };
 		8B170CE21E8B2858005F45AB /* SFDisplay-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFDisplay-Black.otf"; sourceTree = "<group>"; };
 		8B170CE31E8B2858005F45AB /* SFDisplay-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFDisplay-Bold.otf"; sourceTree = "<group>"; };
 		8B170CE41E8B2858005F45AB /* SFDisplay-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFDisplay-Heavy.otf"; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				8B6914D31E70F6B50007896C /* Assets.xcassets */,
 				8B6914D51E70F6B50007896C /* LaunchScreen.storyboard */,
 				8B6914D81E70F6B50007896C /* Info.plist */,
+				8A0D369721FA10AC00417812 /* composers.json */,
 				8B170CE11E8B2858005F45AB /* Fonts */,
 			);
 			path = Example;
@@ -336,6 +339,7 @@
 				8B170D051E8B2858005F45AB /* SFText-LightItalic.otf in Resources */,
 				8B170D061E8B2858005F45AB /* SFText-Medium.otf in Resources */,
 				8B170CF81E8B2858005F45AB /* SFDisplay-Bold.otf in Resources */,
+				8A0D369821FA10AC00417812 /* composers.json in Resources */,
 				8B6914D41E70F6B50007896C /* Assets.xcassets in Resources */,
 				8B6914D21E70F6B50007896C /* Main.storyboard in Resources */,
 				8B170D031E8B2858005F45AB /* SFText-HeavyItalic.otf in Resources */,
