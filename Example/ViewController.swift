@@ -46,11 +46,20 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        var nodes = [Node]()
+        
         for composer in data! {
             let node = self.node(from: composer)
-            magnetic.addChild(node)
+            nodes.append(node)
+//            magnetic.addChild(node)
             onScreenData.insert(composer)
         }
+        magnetic.addChildren(nodes)
+        
+//        let node = self.node(from: data![0])
+//        nodes.append(node)
+//        magnetic.addChild(node)
+//        onScreenData.insert(data![0])
     }
     
     private func loadData() {

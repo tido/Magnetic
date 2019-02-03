@@ -66,6 +66,12 @@ import SpriteKit
         }
     }
     
+    override open var lineWidth: CGFloat {
+        didSet {
+            maskOverlay.lineWidth = lineWidth
+        }
+    }
+    
     private(set) var texture: SKTexture?
     
     /**
@@ -107,6 +113,7 @@ import SpriteKit
         }()
         self.fillColor = .white
         self.strokeColor = .white
+        self.lineWidth = 1
         _ = self.sprite
         _ = self.text
         configure(text: text, image: image, color: color)
@@ -187,6 +194,7 @@ open class MaskNode: SKShapeNode {
             let node = SKShapeNode(path: path)
             node.fillColor = .white
             node.strokeColor = .clear
+            node.lineWidth = 1
             return node
         }()
         
