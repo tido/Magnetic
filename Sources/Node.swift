@@ -185,8 +185,8 @@ import SpriteKit
 
 open class MaskNode: SKShapeNode {
     
-    let mask: SKCropNode
-    let maskOverlay: SKShapeNode
+    public let mask: SKCropNode
+    public let maskOverlay: SKShapeNode
     
     public init(path: CGPath) {
         mask = SKCropNode()
